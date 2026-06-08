@@ -1,0 +1,308 @@
+{
+  "name": "Monitor UTPL — Clima y Contexto Loja",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "84e526d7-f0cb-4bc2-9ad1-a1727fe6cec4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a467ab6-b66a-4fe3-8f64-22ce121cb506",
+              "name": "temperatura",
+              "value": "={{$json.current.temperature_2m}}",
+              "type": "string"
+            },
+            {
+              "id": "63d6e194-3e5a-4297-af17-89143463ed77",
+              "name": "viento",
+              "value": "={{$json.current.wind_speed_10m}}",
+              "type": "string"
+            },
+            {
+              "id": "2803420c-27ca-4836-903a-26dda4818e2c",
+              "name": "codigo_clima",
+              "value": "={{$json.current.weather_code}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "cb724af8-be0f-47cb-ab13-f245be291242",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5daa8ba6-9984-4e0a-a066-eb6baddb15e8",
+              "name": "estado",
+              "value": "Alerta",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        -112
+      ],
+      "id": "8b2ce49f-32c3-46aa-876c-2f3c8d19f013",
+      "name": "Alerta"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "90c2779b-d881-4e55-b427-36c81b7b2073",
+              "leftValue": "{{$json.temperatura}}",
+              "rightValue": "10",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        -16
+      ],
+      "id": "b9045faa-696e-4251-af01-2a3f3d0c49a5",
+      "name": "temperatura < 10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e559201b-5b71-4e1b-9e8f-79eaafa48994",
+              "name": "estado",
+              "value": "normal",
+              "type": "string"
+            },
+            {
+              "id": "5dc99e27-6095-42d1-8c0b-05d9808aac72",
+              "name": "temperatura",
+              "value": "={{$json.temperatura}}",
+              "type": "string"
+            },
+            {
+              "id": "6a7ab9b1-f1ca-45ca-85de-691756a6af32",
+              "name": "viento",
+              "value": "={{$json.viento}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        80
+      ],
+      "id": "b5860b03-aaa6-4062-b7d4-2d866eeb0874",
+      "name": "Normal"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1040,
+        -16
+      ],
+      "id": "74afe150-bfbe-49a8-b311-364bcde9afa8",
+      "name": "Reporte Final"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec2f2d5d-4f0f-4b4f-b683-b360714ca453",
+              "name": "temperatura",
+              "value": "={{$json.temperatura}}",
+              "type": "string"
+            },
+            {
+              "id": "04032e3b-8c58-4fbb-a7dc-cdb5fbf46e1a",
+              "name": "viento",
+              "value": "={{$json.viento}}",
+              "type": "string"
+            },
+            {
+              "id": "42710197-53c0-4ccd-99bd-ac8a44718356",
+              "name": "estado",
+              "value": "={{$json.estado}}",
+              "type": "string"
+            },
+            {
+              "id": "a92aec1b-30a3-4f6f-a54a-a7b1faf25ded",
+              "name": "fecha",
+              "value": "={{$now}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1248,
+        -16
+      ],
+      "id": "31c66de8-16cc-4f7c-8a51-2b9b8a7fa868",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=-3.99&longitude=-79.20&current=temperature_2m,wind_speed_10m,weather_code",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "999b0807-9463-42e5-bcb5-14488b75c3c4",
+      "name": "Open-Meteo"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "temperatura < 10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "temperatura < 10": {
+      "main": [
+        [
+          {
+            "node": "Alerta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerta": {
+      "main": [
+        [
+          {
+            "node": "Reporte Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normal": {
+      "main": [
+        [
+          {
+            "node": "Reporte Final",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Reporte Final": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4cbb324f-d7e7-4377-b3dc-71d27a47e9cb",
+  "meta": {
+    "instanceId": "fabd80d0fc9df900c9cc129454b6ae892d8581e4c8f5298baf41946fa985d52f"
+  },
+  "nodeGroups": [],
+  "id": "jhVDP4qTQwF5u34j",
+  "tags": []
+}
