@@ -1,0 +1,405 @@
+{
+  "name": "Monitor UTPL — Clima y Contexto Loja (Automatizado)",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a467ab6-b66a-4fe3-8f64-22ce121cb506",
+              "name": "temperatura",
+              "value": "={{$json.current.temperature_2m}}",
+              "type": "string"
+            },
+            {
+              "id": "63d6e194-3e5a-4297-af17-89143463ed77",
+              "name": "viento",
+              "value": "={{$json.current.wind_speed_10m}}",
+              "type": "string"
+            },
+            {
+              "id": "2803420c-27ca-4836-903a-26dda4818e2c",
+              "name": "codigo_clima",
+              "value": "={{$json.current.weather_code}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        0
+      ],
+      "id": "d091393e-4bb2-4096-823d-b55d0954e32b",
+      "name": "Edit Fields",
+      "notesInFlow": true,
+      "notes": "Extrae y limpia los campos (JSON) de Open-Meteo"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5daa8ba6-9984-4e0a-a066-eb6baddb15e8",
+              "name": "estado",
+              "value": "Alerta",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        848,
+        -160
+      ],
+      "id": "d8778e44-a423-42ec-911f-677fda593316",
+      "name": "Alerta",
+      "notesInFlow": true,
+      "notes": "Asigna estado='alerta' cuando la temperatura está fuera de rango"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "90c2779b-d881-4e55-b427-36c81b7b2073",
+              "leftValue": "{{$json.temperatura}}",
+              "rightValue": "10",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        -16
+      ],
+      "id": "c0784aa1-a1df-4ae0-a792-30d594682bf6",
+      "name": "temperatura < 10",
+      "notesInFlow": true,
+      "notes": "Evalúa si temperatura está fuera del rango normal"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e559201b-5b71-4e1b-9e8f-79eaafa48994",
+              "name": "estado",
+              "value": "normal",
+              "type": "string"
+            },
+            {
+              "id": "5dc99e27-6095-42d1-8c0b-05d9808aac72",
+              "name": "temperatura",
+              "value": "={{$json.temperatura}}",
+              "type": "string"
+            },
+            {
+              "id": "6a7ab9b1-f1ca-45ca-85de-691756a6af32",
+              "name": "viento",
+              "value": "={{$json.viento}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        848,
+        112
+      ],
+      "id": "741257b4-b6f8-4d45-9647-eb083d965bcd",
+      "name": "Normal",
+      "notesInFlow": true,
+      "notes": "Asigna estado='normal' cuando la temperatura está dentro de rango"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1120,
+        -16
+      ],
+      "id": "38ac8635-b755-45b9-a6db-5c78e7fc1719",
+      "name": "Reporte Final",
+      "notesInFlow": true,
+      "notes": "Combina los datos de clima y país en un solo flujo (merge by position)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b4789949-21a6-4bad-ad04-b5a778c697f8",
+              "name": "ciudad",
+              "value": "Loja",
+              "type": "string"
+            },
+            {
+              "id": "ec2f2d5d-4f0f-4b4f-b683-b360714ca453",
+              "name": "temperatura",
+              "value": "={{ $('Edit Fields').first().json.temperatura }}",
+              "type": "string"
+            },
+            {
+              "id": "04032e3b-8c58-4fbb-a7dc-cdb5fbf46e1a",
+              "name": "viento",
+              "value": "={{ $('Normal').first().json.viento }}",
+              "type": "string"
+            },
+            {
+              "id": "42710197-53c0-4ccd-99bd-ac8a44718356",
+              "name": "estado",
+              "value": "={{ $('Normal').first().json.estado }}",
+              "type": "string"
+            },
+            {
+              "id": "bc654ba9-a87d-42fb-8dae-d5e099c542e1",
+              "name": "timestamp",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "2e3c83bb-f16a-425b-bfa1-40040f3cb521",
+              "name": "pais",
+              "value": "={{ $('HTTP Request').first().json.data.country }}",
+              "type": "string"
+            },
+            {
+              "id": "53abcbc1-9738-4c11-8107-b4e9f884e0b3",
+              "name": "poblacion",
+              "value": "={{ $('HTTP Request').first().json.data.populationCounts[$('HTTP Request').first().json.data.populationCounts.length - 1].value }}",
+              "type": "string"
+            },
+            {
+              "id": "42d57168-f9b8-47b6-90be-5c1408cd33f1",
+              "name": "moneda",
+              "value": "USD",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        -16
+      ],
+      "id": "6ddcb88f-a079-4e4e-869c-9c8c9840760f",
+      "name": "Edit Fields1",
+      "notesInFlow": true,
+      "notes": "Construye el objeto final del reporte: ciudad, temperatura, viento, estado, país, población, moneda, timestamp"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=-3.99&longitude=-79.20&current=temperature_2m,wind_speed_10m,weather_code",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        160,
+        0
+      ],
+      "id": "5ee669c5-9cfd-4d30-b2b9-a6e1bfec86f1",
+      "name": "Open-Meteo",
+      "notesInFlow": true,
+      "notes": "Consulta el clima actual de Loja :\nTemperatura\nviento\ncodigo de Condicion\n"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://countriesnow.space/api/v0.1/countries/population",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "country",
+              "value": "Ecuador"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        832,
+        320
+      ],
+      "id": "2a8ab1d9-4dd6-4239-9704-74185f643f4b",
+      "name": "HTTP Request",
+      "notesInFlow": true,
+      "notes": "\"Consulta población de Ecuador vía CountriesNow API (POST)\""
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "5211aacc-8ba2-4905-9d93-13a04fe479aa",
+      "name": "Schedule Trigger",
+      "notesInFlow": true,
+      "notes": "Ejecuta el Flujo de Monitoreo cada 60 minutos"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "temperatura < 10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "temperatura < 10": {
+      "main": [
+        [
+          {
+            "node": "Alerta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerta": {
+      "main": [
+        [
+          {
+            "node": "Reporte Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normal": {
+      "main": [
+        [
+          {
+            "node": "Reporte Final",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Reporte Final": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Reporte Final",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Open-Meteo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9a2376be-cb57-4e10-ba82-1a950b641207",
+  "meta": {
+    "instanceId": "fabd80d0fc9df900c9cc129454b6ae892d8581e4c8f5298baf41946fa985d52f"
+  },
+  "nodeGroups": [],
+  "id": "FeKJcaFdtBN6H83L",
+  "tags": []
+}
