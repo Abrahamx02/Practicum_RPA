@@ -1,0 +1,117 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Arquitectura Pipeline RPA - Macroentorno (4to ciclo)" id="pipeline-rpa-1">
+    <mxGraphModel dx="3956" dy="2543" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="titleA" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=14;" value="FUENTES" vertex="1">
+          <mxGeometry height="20" width="320" x="-360" y="-320" as="geometry" />
+        </mxCell>
+        <mxCell id="bce" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#E1F5EE;strokeColor=#0F6E56;fontColor=#04342C;fontSize=12;" value="BCE&#xa;• Cuentas Nacionales (PIB real, VAB, Matriz E-I) — mensual/trimestral&#xa;• Sector Real (IEE) — mensual&#xa;• Sector Externo (precio petróleo) — DIARIO&#xa;• Publicaciones (riesgo país) — DIARIO" vertex="1">
+          <mxGeometry height="170" width="320" x="-360" y="-160" as="geometry" />
+        </mxCell>
+        <mxCell id="inec" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#E1F5EE;strokeColor=#0F6E56;fontColor=#04342C;fontSize=12;" value="INEC&#xa;• ENEMDU — trimestral (link dinámico, requiere inspección)&#xa;• Censo 2022 — estático (descarga única)" vertex="1">
+          <mxGeometry height="110" width="320" x="-360" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="supercias" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#E1F5EE;strokeColor=#0F6E56;fontColor=#04342C;fontSize=12;" value="SUPERCIAS&#xa;• Ranking empresas — anual (descarga directa)&#xa;• Directorio compañías — mensual (formulario JSF, requiere bot)" vertex="1">
+          <mxGeometry height="110" width="320" x="-360" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="mineduc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#E1F5EE;strokeColor=#0F6E56;fontColor=#04342C;fontSize=12;" value="MINEDUC&#xa;• AMIE (registro administrativo) — anual" vertex="1">
+          <mxGeometry height="80" width="320" x="-360" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="n8n" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontColor=#26215C;fontSize=12;fontStyle=1;" value="N8N&#xa;8 fuentes con descarga directa&#xa;(HTTP Request / scraping simple)" vertex="1">
+          <mxGeometry height="420" width="180" x="320" y="-140" as="geometry" />
+        </mxCell>
+        <mxCell id="uipath" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAECE7;strokeColor=#993C1D;fontColor=#4A1B0C;fontSize=12;fontStyle=1;" value="UiPath&#xa;Supercias Directorio&#xa;(robot completa formulario JSF y descarga)" vertex="1">
+          <mxGeometry height="90" width="180" x="130" y="-320" as="geometry" />
+        </mxCell>
+        <mxCell id="titleB" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=14;" value="FLUJO POR FUENTE (patrón repetido para cada una)" vertex="1">
+          <mxGeometry height="20" width="300" x="640" y="-390" as="geometry" />
+        </mxCell>
+        <mxCell id="trigger" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" value="Schedule Trigger&#xa;Periodicidad según fuente:&#xa;diario / semanal / mensual / trimestral / anual" vertex="1">
+          <mxGeometry height="80" width="260" x="660" y="-115" as="geometry" />
+        </mxCell>
+        <mxCell id="extraccion" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" value="Extracción&#xa;N8N: HTTP Request / navegación web&#xa;UiPath: completa formulario y descarga" vertex="1">
+          <mxGeometry height="80" width="260" x="660" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="guardar" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" value="Guardar archivo&#xa;nombre_AAAAMMDD.ext&#xa;Ej: pib_real_20260512.xlsx" vertex="1">
+          <mxGeometry height="70" width="260" x="660" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="fEVMzmOWX7kAJMvYu8N0-3" edge="1" parent="1" source="verificacion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="folders">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="verificacion" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#854F0B;fontColor=#412402;fontSize=12;" value="¿Archivo válido?&#xa;(no vacío, formato/extensión esperada)" vertex="1">
+          <mxGeometry height="110" width="300" x="640" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="logalerta" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#A32D2D;fontColor=#501313;fontSize=12;" value="Manejo de error SIMPLE (4to ciclo)&#xa;• Registrar error en log (fuente, fecha, detalle)&#xa;• Alerta interna (Email/Slack)&#xa;• Sin reintento automático&#xa;• El pipeline CONTINÚA con la siguiente fuente" vertex="1">
+          <mxGeometry height="120" width="300" x="640" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="titleC" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=14;" value="DESTINO Y NOTIFICACIÓN" vertex="1">
+          <mxGeometry height="20" width="380" x="1270" y="-40" as="geometry" />
+        </mxCell>
+        <mxCell id="fEVMzmOWX7kAJMvYu8N0-2" edge="1" parent="1" source="folders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="notificacion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="folders" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontFamily=Courier New;fontSize=11;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;" value="Estructura de carpetas (datos_macroentorno/)&#xa;&#xa;datos_macroentorno/&#xa;├── bce/&#xa;│   ├── cuentas_nacionales/&#xa;│   ├── sector_real/&#xa;│   ├── sector_externo/&#xa;│   └── publicaciones/&#xa;├── inec/&#xa;│   ├── enemdu/&#xa;│   └── censo_2022/&#xa;├── supercias/&#xa;│   ├── ranking/&#xa;│   └── directorio/&#xa;└── mineduc/&#xa;    └── amie/&#xa;&#xa;Nomenclatura: nombre_AAAAMMDD.ext&#xa;(garantiza trazabilidad y reproducibilidad)" vertex="1">
+          <mxGeometry height="480" width="380" x="1270" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="notificacion" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontColor=#173404;fontSize=12;" value="Notificación automática&#xa;(Email / Slack)&#xa;&quot;Hay archivos nuevos disponibles en datos_macroentorno/&quot;" vertex="1">
+          <mxGeometry height="80" width="380" x="1270" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="equipodatos" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontColor=#173404;fontSize=12;fontStyle=1;" value="Equipo de Datos&#xa;Recoge / procesa los archivos desde datos_macroentorno/" vertex="1">
+          <mxGeometry height="70" width="380" x="1270" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bce_n8n" edge="1" parent="1" source="bce" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="n8n">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_inec_n8n" edge="1" parent="1" source="inec" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="n8n">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_mineduc_n8n" edge="1" parent="1" source="mineduc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="n8n">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_supercias_n8n" edge="1" parent="1" source="supercias" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;" target="n8n" value="Ranking">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_supercias_uipath" edge="1" parent="1" source="supercias" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;" target="uipath" value="Directorio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n8n_trigger" edge="1" parent="1" source="n8n" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="trigger">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_uipath_trigger" edge="1" parent="1" source="uipath" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="trigger">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_trigger_extraccion" edge="1" parent="1" source="trigger" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="extraccion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_extraccion_guardar" edge="1" parent="1" source="extraccion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="guardar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_guardar_verificacion" edge="1" parent="1" source="guardar" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="verificacion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_verif_no" edge="1" parent="1" source="verificacion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=12;fontStyle=1;fontColor=#A32D2D;" target="logalerta" value="No">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_logalerta_trigger" edge="1" parent="1" source="logalerta" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;dashed=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" target="trigger" value="continúa con la siguiente fuente (sin reintentar)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="590" />
+              <mxPoint x="600" y="80" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_notif_equipo" edge="1" parent="1" source="notificacion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="equipodatos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fEVMzmOWX7kAJMvYu8N0-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(131, 176, 94));&quot;&gt;SI&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="970" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="u2Z_pnyedCupHetPhc9D-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Herramientas a utilizar&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="190" x="240" y="-410" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
